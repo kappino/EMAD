@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'add_todo_screen.dart';
 import '../models/todo.dart';
 
 class TodoListScreen extends StatefulWidget {
@@ -54,7 +55,23 @@ class _TodoListScreenState extends State<TodoListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          // Apre AddTodoScreen e attende il risultato
+          final risultato = await Navigator.push<Todo>(
+            context,
+            MaterialPageRoute(builder: (_) => const AddTodoScreen()),
+          );
+          //Se la schermata è stata chiusa o risultato == null non fare nulla
+          if (!context.mounted || risultato == null) return;
+          //altrimenti aggiungi l'attività in lista e aggiorna
+          setState(() {
+            _todos.add(risultato);
+          });
+          //Mostra il mess di conferma
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Attività ${risultato.title} aggiunta')),
+          );
+        },
         child: const Icon(Icons.add),
       ),
     );
