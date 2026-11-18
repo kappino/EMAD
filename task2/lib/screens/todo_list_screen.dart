@@ -15,6 +15,33 @@ class _TodoListScreenState extends State<TodoListScreen> {
   final List<Todo> _todos = [];
   // Conta quante attività hanno isCompleted == true (metodi List da L5)
   int get _completedCount => _todos.where((t) => t.isCompleted).length;
+
+  Future<void> _eliminaAttivita(int index) async {
+    final confermato = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Elimina attività'),
+        content: Text('Vuoi eliminare "${_todos[index].title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Annulla'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Elimina'),
+          ),
+        ],
+      ),
+    );
+    //Variante rinuncia
+    if (confermato != true) return;
+
+    setState(() {
+      _todos.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
