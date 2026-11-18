@@ -75,7 +75,49 @@ class _TodoListScreenState extends State<TodoListScreen> {
                     itemCount: _todos.length,
                     itemBuilder: (context, index) {
                       final todo = _todos[index];
-                      return ListTile(title: Text(todo.title));
+                      //return ListTile(title: Text(todo.title));
+                      return ListTile(
+                        leading: Checkbox(
+                          value: todo.isCompleted,
+                          onChanged: (valore) => setState(() {
+                            todo.isCompleted = valore ?? false;
+                          }),
+                        ),
+                        title: Text(
+                          todo.title,
+                          style: TextStyle(
+                            decoration: todo.isCompleted
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
+                        ),
+                        subtitle: Row(
+                          children: [
+                            Text(todo.isCompleted ? 'Completata' : 'Da fare'),
+                            // Collection-if (Vedi lez5 - Dart)
+                            if (todo.isImportant) ...[
+                              const SizedBox(width: 12),
+                              const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              const Text(
+                                'Importante',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => _eliminaAttivita(index),
+                        ),
+                        onTap: () => setState(() {
+                          todo.isCompleted = !todo.isCompleted;
+                        }),
+                      );
                     },
                   ),
           ),
